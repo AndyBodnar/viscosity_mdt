@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="hidden">
+    <div class="stage">
+        <div class="tablet">
+            <!-- Clickable power button over the bezel hotspot -->
+            <div class="power-btn" id="power-btn" title="Power off"></div>
+
+            <!-- App content rendered inside the bezel's screen cutout -->
+            <div class="screen" id="screen">
+
+                <!-- Boot -->
+                <div class="boot" id="boot">
+                    <div class="boot-logo">V</div>
+                    <div class="boot-name">VISCOSITY<span>OS</span></div>
+                    <div class="boot-bar"><div class="boot-fill"></div></div>
+                </div>
+
+                <!-- Character select / create -->
+                <div class="charselect hidden" id="charselect">
+                    <div class="cs-head">
+                        <div class="cs-logo">V</div>
+                        <div>
+                            <div class="cs-title">Select Character</div>
+                            <div class="cs-sub">Choose a character or create a new one</div>
+                        </div>
+                    </div>
+                    <div class="cs-slots" id="cs-slots"></div>
+
+                    <!-- Create overlay -->
+                    <div class="cs-create hidden" id="cs-create">
+                        <div class="cs-create-card">
+                            <h2>New Character</h2>
+                            <div class="field"><label>First name</label><input id="c-first" maxlength="24" placeholder="John" /></div>
+                            <div class="field"><label>Last name</label><input id="c-last" maxlength="24" placeholder="Doe" /></div>
+                            <div class="field"><label>Date of birth</label><input id="c-dob" type="date" /></div>
+                            <div class="field"><label>Gender</label>
+                                <select id="c-gender"><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select>
+                            </div>
+                            <div class="field"><label>Nationality</label><input id="c-nat" maxlength="32" placeholder="San Andreas" /></div>
+                            <div class="cs-create-actions">
+                                <button class="btn ghost" id="c-cancel">Cancel</button>
+                                <button class="btn" id="c-confirm">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toast -->
+                <div class="toast hidden" id="toast"></div>
+
+                <!-- Home -->
+                <div class="os hidden" id="os">
+                    <div class="statusbar">
+                        <span id="sb-time">00:00</span>
+                        <span class="sb-right">
+                            <span id="sb-name">—</span>
+                            <span class="sb-batt">📶 100%</span>
+                        </span>
+                    </div>
+
+                    <!-- Home launcher -->
+                    <div class="view active" id="view-home">
+                        <div class="home-head">
+                            <div class="clock" id="home-clock">00:00</div>
+                            <div class="home-date" id="home-date">—</div>
+                        </div>
+                        <div class="apps" id="apps"></div>
+                    </div>
+
+                    <!-- App container -->
+                    <div class="view" id="view-app">
+                        <div class="app-bar">
+                            <button class="back-btn" id="app-back">‹ Home</button>
+                            <span class="app-title" id="app-title">App</span>
+                        </div>
+                        <div class="app-body" id="app-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

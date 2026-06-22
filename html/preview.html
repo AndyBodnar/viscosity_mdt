@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body { background: #15121c; }
+        body.hidden { display: flex !important; }
+    </style>
+</head>
+<body class="hidden">
+    <div class="stage">
+        <div class="tablet">
+            <div class="power-btn" id="power-btn" title="Power off"></div>
+            <div class="screen" id="screen">
+                <div class="boot" id="boot">
+                    <div class="boot-logo">V</div>
+                    <div class="boot-name">VISCOSITY<span>OS</span></div>
+                    <div class="boot-bar"><div class="boot-fill"></div></div>
+                </div>
+
+                <div class="charselect hidden" id="charselect">
+                    <div class="cs-head">
+                        <div class="cs-logo">V</div>
+                        <div><div class="cs-title">Select Character</div><div class="cs-sub">Choose a character or create a new one</div></div>
+                    </div>
+                    <div class="cs-slots" id="cs-slots"></div>
+                    <div class="cs-create hidden" id="cs-create">
+                        <div class="cs-create-card">
+                            <h2>New Character</h2>
+                            <div class="field"><label>First name</label><input id="c-first" maxlength="24" placeholder="John" /></div>
+                            <div class="field"><label>Last name</label><input id="c-last" maxlength="24" placeholder="Doe" /></div>
+                            <div class="field"><label>Date of birth</label><input id="c-dob" type="date" /></div>
+                            <div class="field"><label>Gender</label>
+                                <select id="c-gender"><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select>
+                            </div>
+                            <div class="field"><label>Nationality</label><input id="c-nat" maxlength="32" placeholder="San Andreas" /></div>
+                            <div class="cs-create-actions">
+                                <button class="btn ghost" id="c-cancel">Cancel</button>
+                                <button class="btn" id="c-confirm">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toast hidden" id="toast"></div>
+
+                <div class="os hidden" id="os">
+                    <div class="statusbar">
+                        <span id="sb-time">00:00</span>
+                        <span class="sb-right"><span id="sb-name">—</span><span class="sb-batt">📶 100%</span></span>
+                    </div>
+                    <div class="view active" id="view-home">
+                        <div class="home-head"><div class="clock" id="home-clock">00:00</div><div class="home-date" id="home-date">—</div></div>
+                        <div class="apps" id="apps"></div>
+                    </div>
+                    <div class="view" id="view-app">
+                        <div class="app-bar"><button class="back-btn" id="app-back">‹ Home</button><span class="app-title" id="app-title">App</span></div>
+                        <div class="app-body" id="app-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        const fire = (data) => window.dispatchEvent(new MessageEvent('message', { data }));
+        const samplePlayer = {
+            citizenid: 'VSF8A3K9F2Q',
+            name: { firstname: 'Andrew', lastname: 'Bodnar' },
+            charinfo: { dob: '1998-04-12', gender: 'male', nationality: 'San Andreas', phone: '4155551234' },
+            money: { cash: 742, bank: 18450 },
+            job: { label: 'Police', gradeLabel: 'Sergeant' },
+            metadata: { licenses: { driver: true } },
+        };
+        let chars = [{ citizenid: 'VSF8A3K9F2Q', firstname: 'Andrew', lastname: 'Bodnar', job: '{"label":"Police"}' }];
+        let veh = [{ id: 1, plate: 'VS42KQX', make: 'Bravado Buffalo', model: '', color: 'Black' }];
+
+        window.fetch = function (url, opts) {
+            const name = String(url).split('/').pop();
+            const body = opts && opts.body ? JSON.parse(opts.body) : {};
+            switch (name) {
+                case 'char:select': setTimeout(() => fire({ type: 'open', data: samplePlayer }), 20); break;
+                case 'char:create': setTimeout(() => fire({ type: 'open', data: samplePlayer }), 20); break;
+                case 'char:delete': chars = []; setTimeout(() => fire({ type: 'charSelect', characters: chars, maxSlots: 3 }), 20); break;
+                case 'dmv:vehicles': setTimeout(() => fire({ type: 'vehicles', vehicles: veh }), 20); break;
+                case 'dmv:register':
+                    veh.unshift({ id: Date.now(), plate: body.plate || 'VS' + Math.floor(Math.random()*90+10) + 'XYZ', make: body.make, model: '', color: body.color });
+                    setTimeout(() => { fire({ type: 'vehicles', vehicles: veh }); fire({ type: 'dmvResult', ok: true, msg: 'Vehicle registered!' }); }, 20);
+                    break;
+                case 'dmv:license':
+                    samplePlayer.metadata.licenses[body.id] = true;
+                    setTimeout(() => { fire({ type: 'setData', data: samplePlayer }); fire({ type: 'dmvResult', ok: true, msg: 'License approved!' }); }, 20);
+                    break;
+                case 'close': setTimeout(() => fire({ type: 'charSelect', characters: chars, maxSlots: 3 }), 20); break;
+            }
+            return Promise.resolve(new Response('{}'));
+        };
+
+        // Start at character select
+        window.addEventListener('DOMContentLoaded', () =>
+            setTimeout(() => fire({ type: 'charSelect', characters: chars, maxSlots: 3 }), 60));
+    })();
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
