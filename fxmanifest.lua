@@ -1,3 +1,8 @@
+-- ============================================================================
+--  viscosity_mdt  ·  (c) 2026 AndyBodnar (Viscosity)
+--  https://github.com/AndyBodnar/viscosity_mdt
+--  Server use only. No resale, repackaging, or credit removal. See LICENSE.
+-- ============================================================================
 fx_version 'cerulean'
 games { 'gta5' }
 
